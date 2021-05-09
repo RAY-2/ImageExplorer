@@ -1,4 +1,4 @@
-package com.ray_apps.imageexplorer;
+package com.ray_apps.imageexplorer.Adaptors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+//A class to handle Discover and BookMark fragments
 public class ViewPagerAdaptor extends FragmentPagerAdapter {
 
     private final List<Fragment> listFragment = new ArrayList<>();

@@ -6,12 +6,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.os.Bundle;
-import android.os.Message;
 
 import com.google.android.material.tabs.TabLayout;
+import com.ray_apps.imageexplorer.Adaptors.ViewPagerAdaptor;
+import com.ray_apps.imageexplorer.Fragments.Bookmark;
+import com.ray_apps.imageexplorer.Fragments.Discover;
 
 public class MainActivity extends AppCompatActivity {
 
