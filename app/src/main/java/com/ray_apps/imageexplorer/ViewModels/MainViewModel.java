@@ -9,6 +9,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bumptech.glide.Glide;
+import com.ray_apps.imageexplorer.Interfaces.BookmarkManager;
 import com.ray_apps.imageexplorer.Models.SearchImage;
 import com.ray_apps.imageexplorer.Models.UnsplashImage;
 import com.ray_apps.imageexplorer.Utils.APIClient;

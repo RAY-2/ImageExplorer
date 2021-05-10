@@ -1,5 +1,7 @@
 package com.ray_apps.imageexplorer.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +20,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.ray_apps.imageexplorer.Interfaces.BookmarkManager;
 import com.ray_apps.imageexplorer.ViewModels.MainViewModel;
 import com.ray_apps.imageexplorer.Adaptors.MyAdaptor;
 import com.ray_apps.imageexplorer.R;
 
-public class Discover extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Discover extends Fragment implements BookmarkManager {
     View view;
 
 
@@ -32,8 +42,12 @@ public class Discover extends Fragment {
     private MainViewModel viewModel;
     private NestedScrollView nestedScrollView;
 
+    private Button bookmarkButton;
 
-    private static final int SPAN_COUNT = 4;
+    List<String> myBookmarkList;
+    private static final String KEY = "KEY";
+
+    private static final int SPAN_COUNT = 3;
     //to handle loading images if search is ongoing or stopped
     private Boolean SEARCHING = false;
 
@@ -57,6 +71,7 @@ public class Discover extends Fragment {
         //initialize view and observe Livedata
         initView();
         observeLiveData();
+        createBookmarkList();
     }
 
 
@@ -74,7 +89,7 @@ public class Discover extends Fragment {
     }
 
     private void initAdapter(){
-        adapter = new MyAdaptor(getContext(), viewModel.getLiveImages().getValue());
+        adapter = new MyAdaptor(getContext(), viewModel.getLiveImages().getValue(),this);
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
@@ -89,7 +104,6 @@ public class Discover extends Fragment {
 
         SearchView search = view.findViewById(R.id.searchView);
         nestedScrollView = view.findViewById(R.id.scroll_view);
-
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -134,4 +148,56 @@ public class Discover extends Fragment {
 
     }
 
+    private void createBookmarkList() {
+        myBookmarkList = new ArrayList<String>();
+
+        SharedPreferences sharedPreferences;
+        sharedPreferences = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+
+        Gson gson = new Gson();
+        String response=sharedPreferences.getString(KEY , "");
+        Log.d("RAY: ", "response = " + response);
+
+        myBookmarkList = gson.fromJson(response,
+                new TypeToken<List<String>>(){}.getType());
+
+        if(myBookmarkList != null)
+            for(int i=0;i<myBookmarkList.size();i++)
+            {
+                Log.d("RAY: ", myBookmarkList.get(i));
+            }
+    }
+
+    @Override
+    public void addToBookmarks(String string) {
+
+        //find if already in bookmarks
+        if(myBookmarkList == null)
+            myBookmarkList = new ArrayList<>();
+
+
+        for(int i=0;i<myBookmarkList.size();i++)
+        {
+            if(string.equals(myBookmarkList.get(i)))
+            {
+                Toast.makeText(getContext(),"Image already added to bookmarks",Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        myBookmarkList.add(string);
+        SharedPreferences sharedPreferences;
+        SharedPreferences.Editor editor;
+        sharedPreferences = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(myBookmarkList);
+
+        editor = sharedPreferences.edit();
+        editor.remove(KEY).commit();
+        editor.putString(KEY, json);
+        editor.commit();
+
+        Toast.makeText(getContext(),"Image added to bookmarks",Toast.LENGTH_SHORT).show();
+    }
 }

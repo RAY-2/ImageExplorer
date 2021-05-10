@@ -5,8 +5,12 @@ import com.ray_apps.imageexplorer.Models.UnsplashImage;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import io.reactivex.Observable;
 
@@ -32,5 +36,8 @@ public interface APIInterface {
     @GET("search/photos")
     Observable<SearchImage> getNextSearchPhotos(@Query("query") String query, @Query("page") int page);
 
+    @Headers(header)
+    @POST("photos/:id/like")
+    Call<Boolean> likeImage(@Body Boolean like, @Query("id") String ID);
 }
 
