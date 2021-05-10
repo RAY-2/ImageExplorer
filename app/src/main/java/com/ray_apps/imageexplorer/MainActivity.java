@@ -15,9 +15,13 @@ import com.ray_apps.imageexplorer.Fragments.Discover;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String IMAGE_KEY = "IMAGE_URL_KEY";
+    public static final String AUTHOR_KEY = "AUTHOR_KEY";
+
     private ViewPagerAdaptor viewPagerAdaptor;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

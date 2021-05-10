@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import com.ray_apps.imageexplorer.ViewModels.MainViewModel;
 import com.ray_apps.imageexplorer.Adaptors.MyAdaptor;
@@ -86,22 +87,22 @@ public class Discover extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         progressBar.setVisibility(View.VISIBLE);
 
-        EditText et_search = view.findViewById(R.id.et_search);
-        Button btn_search = view.findViewById(R.id.btn_search);
+        SearchView search = view.findViewById(R.id.searchView);
         nestedScrollView = view.findViewById(R.id.scroll_view);
 
-        btn_search.setOnClickListener(v -> {
-            if(!SEARCHING)
-            {
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
                 progressBar.setVisibility(View.VISIBLE);
-                viewModel.getSearchImages(et_search.getText().toString());
+                viewModel.getSearchImages(query);
                 SEARCHING = true;
-                btn_search.setText("STOP SEARCH");
+                return false;
             }
-            else
-            {
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
                 SEARCHING = false;
-                btn_search.setText("SEARCH");
+                return false;
             }
         });
 
@@ -120,7 +121,7 @@ public class Discover extends Fragment {
                     if(SEARCHING)
                     {
                         //Add Images to existing search result
-                        viewModel.getSearchPagination(et_search.getText().toString());
+                        viewModel.getSearchPagination(search.getQuery().toString());
                     }
                     else
                     {

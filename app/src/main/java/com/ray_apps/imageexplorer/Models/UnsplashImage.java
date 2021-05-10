@@ -39,8 +39,14 @@ public class UnsplashImage {
         @SerializedName("thumb")
         private String thumb;
 
+        @SerializedName("regular")
+        private String regular;
+
         public String getThumb() {
             return thumb;
+        }
+        public String getRegular() {
+            return regular;
         }
     }
 

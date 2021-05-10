@@ -2,22 +2,27 @@ package com.ray_apps.imageexplorer.Adaptors;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.ray_apps.imageexplorer.Activities.ViewFullScaleImage;
+import com.ray_apps.imageexplorer.MainActivity;
 import com.ray_apps.imageexplorer.R;
 import com.ray_apps.imageexplorer.Models.UnsplashImage;
 
+import java.io.Serializable;
 import java.util.List;
 
 //Adaptor class for Handling Recycler view in Discover Tab that shows Images
@@ -54,9 +59,19 @@ public class MyAdaptor extends RecyclerView.Adapter<MyAdaptor.ViewHolder> {
                 .into(holder.iv_photo);
 
         holder.tv_author.setText(listOfImages.get(position).getUser().getUsername());
-        holder.iv_photo.setOnClickListener(v -> Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show());
+        holder.iv_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        // TODO: 09-05-2021 Open Image on click from this position
+                Intent mainIntent = new Intent(context, ViewFullScaleImage.class);
+
+                mainIntent.putExtra(MainActivity.IMAGE_KEY, listOfImages.get(position).getUrls().getRegular());
+                mainIntent.putExtra(MainActivity.AUTHOR_KEY,listOfImages.get(position).getUser().getUsername());
+
+                context.startActivity(mainIntent);
+            }
+        });
+
         Log.d("POSITION DEBUG", String.valueOf(position));
     }
 
